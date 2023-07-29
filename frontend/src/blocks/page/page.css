@@ -1,0 +1,9 @@
+.page {
+  min-height: 100vh;
+  min-width: 320px;
+  background-color: #000000;
+  font-family: 'Inter', 'Arial', sans-serif;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+  position: relative;
+}

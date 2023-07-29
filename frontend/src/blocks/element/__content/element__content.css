@@ -1,0 +1,9 @@
+.element__content {
+  padding: 0;
+  margin: 0 auto;
+  align-self: center;
+  width: 246px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
