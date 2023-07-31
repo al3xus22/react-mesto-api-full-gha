@@ -1,4 +1,5 @@
-export const BASE_URL = 'http://localhost:3000';
+//export const BASE_URL = 'http://localhost:3000';
+export const BASE_URL = 'https://kartback.nomoreparties.co';
 
 export const register = ({email, password}) => {
   return fetch(`${BASE_URL}/signup`, {
@@ -10,7 +11,6 @@ export const register = ({email, password}) => {
     },
     body: JSON.stringify({email, password}),
   })
-    //.then(res => res.ok ? res.json() : Promise.reject(`Ошибка: ${res.status}`));
 }
 
 export const authorize = ({email, password}) => {
@@ -23,7 +23,6 @@ export const authorize = ({email, password}) => {
     },
     body: JSON.stringify({email, password}),
   })
-    //.then(res => res.ok ? res.json() : Promise.reject(`Ошибка: ${res.status}`));
 }
 
 export const signOut = () => {
@@ -46,5 +45,4 @@ export const getContent = () => {
       'Content-Type': 'application/json',
     }
   })
-    //.then(res => res.json())
 }
