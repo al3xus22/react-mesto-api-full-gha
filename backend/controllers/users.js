@@ -73,9 +73,12 @@ const createUser = (req, res, next) => {
   const {
     name, about, avatar, email, password,
   } = req.body;
-  bcrypt.hash(password, 10)
-    .then((hash) => {
-      User.create({
+  bcrypt.hash(password, 10, (err, hash) => User.findOne({ email })
+    .then((user) => {
+      if (user) {
+        throw new ConflictRequest('Пользователь с таким Email уже существует');
+      }
+      return User.create({
         name,
         about,
         avatar,
@@ -94,8 +97,6 @@ const createUser = (req, res, next) => {
         .catch((err) => {
           if (err.name === 'ValidationError') {
             next(new BadRequest(err.message));
-          } else if (err.code === 11000) {
-            next(new ConflictRequest('Пользователь с таким Email уже существует'));
           } else {
             next(err);
           }
@@ -103,7 +104,8 @@ const createUser = (req, res, next) => {
     })
     .catch((error) => {
       next(error);
-    });
+    })
+  )
 };
 
 const updateUser = (req, res, next) => {
