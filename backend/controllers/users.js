@@ -7,7 +7,7 @@ const BadRequest = require('../errors/bad-request');
 const ConflictRequest = require('../errors/conflict-request');
 const NotFoundError = require('../errors/not-found-err');
 
-const { NODE_ENV, JWT_SECRET, SALT_ROUNDS } = process.env;
+const { NODE_ENV, JWT_SECRET } = process.env;
 
 const login = (req, res, next) => {
   const { email, password } = req.body;
@@ -73,12 +73,13 @@ const createUser = (req, res, next) => {
   const {
     name, about, avatar, email, password,
   } = req.body;
-  bcrypt.hash(password, SALT_ROUNDS, (err, hash) => User.findOne({ email })
-    .then((user) => {
-      if (user) {
-        throw new ConflictRequest('Пользователь с таким Email уже существует');
-      }
-      return User.create({
+  if (!password) {
+    return next(new BadRequest('Введите пароль'));
+  }
+
+  bcrypt.hash(password, 10)
+    .then((hash) => {
+      User.create({
         name,
         about,
         avatar,
@@ -96,21 +97,17 @@ const createUser = (req, res, next) => {
         // eslint-disable-next-line no-shadow
         .catch((err) => {
           if (err.name === 'ValidationError') {
-            next(new BadRequest(err.message));
+            return next(new BadRequest(err.message));
+          } else if (err.code === 11000) {
+            return next(new ConflictRequest('Пользователь с таким Email уже существует'));
           } else {
-            next(err);
+            return next(err);
           }
         });
     })
     .catch((error) => {
-      if (error.name === 'ValidationError') {
-        next(new BadRequest('Что-то пошло не так'));
-      } else if (error.code === 11000) {
-        next(new ConflictRequest('Пользователь с таким Email уже существует'));
-      } else {
-        next(error);
-      }
-    }));
+        return next(error);
+    });
 };
 
 const updateUser = (req, res, next) => {

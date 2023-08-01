@@ -1,5 +1,5 @@
 class Api {
-  constructor({baseUrl, headers}) {
+  constructor({ baseUrl, headers }) {
     this.url = baseUrl;
     this.headers = headers;
   }
@@ -29,7 +29,7 @@ class Api {
     })
   }
 
-  setUserInfo({name, about}) {
+  setUserInfo({ name, about }) {
     return fetch(`${this.url}/users/me`, {
       method: 'PATCH',
       headers: this.headers,
@@ -43,7 +43,7 @@ class Api {
     })
   }
 
-  addNewCard({title, link}) {
+  addNewCard({ title, link }) {
     return fetch(`${this.url}/cards`, {
       method: 'POST',
       headers: this.headers,
@@ -67,7 +67,7 @@ class Api {
     })
   }
 
-  updateUserAvatar({avatar}) {
+  updateUserAvatar({ avatar }) {
     return fetch(`${this.url}/users/me/avatar`, {
       method: 'PATCH',
       headers: this.headers,
@@ -92,7 +92,7 @@ class Api {
 }
 
 export const api = new Api({
-  //baseUrl: 'http://localhost:3000',
+  //baseUrl: 'http://localhost:3001',
   baseUrl: 'https://kartback.nomoreparties.co',
   headers: {
     'Accept': 'application/json',

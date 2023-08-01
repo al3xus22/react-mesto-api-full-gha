@@ -18,6 +18,8 @@ import InfoTooltip from "./InfoTooltip";
 import * as auth from '../utils/Auth';
 
 function App() {
+  const [loggedIn, setLoggedIn] = React.useState(false);
+  console.log(loggedIn);
   const [currentUser, setCurrentUser] = React.useState({
     avatar: '../images/loader.gif',
     name: 'Загрузка',
@@ -26,7 +28,6 @@ function App() {
   });
 
   const navigate = useNavigate();
-  const [loggedIn, setLoggedIn] = React.useState(false);
   const [userEmail, setUserEmail] = React.useState({ email: '' });
   const [isEditAvatarPopupOpen, setEditAvatarPopupOpen] = React.useState(false);
   const [isEditProfilePopupOpen, setEditProfilePopupOpen] = React.useState(false);
@@ -77,7 +78,7 @@ function App() {
     const { password, email } = formValue;
     auth.authorize({ email, password })
       .then(res => res.ok ? res.json() : Promise.reject(`Ошибка: ${res.status}`))
-      .then((res) => {
+      .then(() => {
         auth.getContent()
           .then(res => res.json())
           .then((res) => {
@@ -114,14 +115,14 @@ function App() {
     auth.getContent()
       .then(res => res.json())
       .then((res) => {
-        if (res) {
+        if (res.email) {
           setUserEmail(res.email);
           setLoggedIn(true);
           navigate('/', { replace: true });
         }
       })
       .catch((error) => {
-        console.log(error)
+        console.log(error);
       });
   };
 
