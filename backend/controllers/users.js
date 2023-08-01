@@ -73,10 +73,6 @@ const createUser = (req, res, next) => {
   const {
     name, about, avatar, email, password,
   } = req.body;
-  if (!password) {
-    return next(new BadRequest('Введите пароль'));
-  }
-
   bcrypt.hash(password, 10)
     .then((hash) => {
       User.create({
@@ -97,16 +93,16 @@ const createUser = (req, res, next) => {
         // eslint-disable-next-line no-shadow
         .catch((err) => {
           if (err.name === 'ValidationError') {
-            return next(new BadRequest(err.message));
+            next(new BadRequest(err.message));
           } else if (err.code === 11000) {
-            return next(new ConflictRequest('Пользователь с таким Email уже существует'));
+            next(new ConflictRequest('Пользователь с таким Email уже существует'));
           } else {
-            return next(err);
+            next(err);
           }
         });
     })
     .catch((error) => {
-        return next(error);
+      next(error);
     });
 };
 
