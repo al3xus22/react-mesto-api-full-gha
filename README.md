@@ -9,8 +9,8 @@
 
 ## Ссылки на проект
 
-IP-адрес x.x.x.x
+IP-адрес 158.160.50.88
 
-Frontend https://...
+Frontend https://kartochki.ru.nomoreparties.co
 
-Backend https://...
+Backend https://kartback.nomoreparties.co
