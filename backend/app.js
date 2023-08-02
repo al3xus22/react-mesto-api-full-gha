@@ -4,7 +4,7 @@ require('dotenv').config();
 // eslint-disable-next-line import/order
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 
-const { PORT, DB_URL } = process.env;
+const { PORT = 3000, DB_URL = 'mongodb://127.0.0.1:27017/mestodb' } = process.env;
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 // eslint-disable-next-line import/no-extraneous-dependencies
