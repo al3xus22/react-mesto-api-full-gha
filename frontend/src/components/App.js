@@ -19,7 +19,6 @@ import * as auth from '../utils/Auth';
 
 function App() {
   const [loggedIn, setLoggedIn] = React.useState(false);
-  console.log(loggedIn);
   const [currentUser, setCurrentUser] = React.useState({
     avatar: '../images/loader.gif',
     name: 'Загрузка',
@@ -40,18 +39,37 @@ function App() {
   const [cardId, setCardId] = React.useState('');
 
 //Загрузка инфо пользователя и карточек--------------------------------------------------------------------------
-  React.useEffect(() => {
-    loggedIn && Promise.all([api.getUserInfo(), api.getInitialCards()])
-      .then(([user, cards]) => {
+//   React.useEffect(() => {
+//     loggedIn && Promise.all([api.getUserInfo(), api.getInitialCards()])
+//       .then(([user, cards]) => {
+//         setCurrentUser(user);
+//         setCards(cards);
+//       })
+//       .catch((error) => {
+//         console.log(error)
+//       });
+//   }, [loggedIn]);
+
+  function loadData() {
+    api.getUserInfo()
+      .then((user) => {
         setCurrentUser(user);
+      })
+      .catch((error) => {
+        console.log(error)
+      });
+
+    api.getInitialCards()
+      .then((cards) => {
         setCards(cards);
       })
       .catch((error) => {
         console.log(error)
       });
-  }, [loggedIn]);
+  }
 
-  //Регистрация------------------------------------------------------------------------------------------------
+
+//Регистрация------------------------------------------------------------------------------------------------
   const registerUser = ({ email, password }) => {
     auth.register({ email, password })
       .then(res => res.ok ? res.json() : Promise.reject(`Ошибка: ${res.status}`))
@@ -73,7 +91,7 @@ function App() {
       });
   };
 
-  //Логин----------------------------------------------------------------------------------------------------
+//Логин----------------------------------------------------------------------------------------------------
   const handleLogin = (formValue) => {
     const { password, email } = formValue;
     auth.authorize({ email, password })
@@ -99,7 +117,7 @@ function App() {
       });
   }
 
-  //Выход из профиля----------------------------------------------------------------------------------------------
+//Выход из профиля----------------------------------------------------------------------------------------------
   const handleSignOut = () => {
     auth.signOut()
       .then(() => {
@@ -110,7 +128,7 @@ function App() {
       .catch((err) => console.log(err));
   };
 
-  //Аутентификация------------------------------------------------------------------------------------------------
+//Аутентификация------------------------------------------------------------------------------------------------
   const checkToken = () => {
     auth.getContent()
       .then(res => {
@@ -122,6 +140,7 @@ function App() {
       })
       .then((res) => {
         if (res.email) {
+          loadData();
           setUserEmail(res.email);
           setLoggedIn(true);
           navigate('/', { replace: true });
@@ -129,14 +148,14 @@ function App() {
       })
       .catch((error) => {
         console.log(error);
-      });
+      })
   };
 
   React.useEffect(() => {
     checkToken();
-  }, []);
+  }, [loggedIn]);
 
-  //Обновление пользователя----------------------------------------------------------------------------------------
+//Обновление пользователя----------------------------------------------------------------------------------------
   function handleUpdateUser(newUserData) {
     api.setUserInfo(newUserData)
       .then((userData) => {
@@ -149,7 +168,7 @@ function App() {
   }
 
 
-  //Функция добавления карточки------------------------------------------------------------------------------------
+//Функция добавления карточки------------------------------------------------------------------------------------
   function handleAddPlaceSubmit(data) {
     api.addNewCard(data)
       .then((newCard) => {
@@ -161,7 +180,7 @@ function App() {
       });
   }
 
-  //Функция лайков карточки ---------------------------------------------------------------------------------------
+//Функция лайков карточки ---------------------------------------------------------------------------------------
   function handleCardLike(card) {
     const isLiked = card.likes?.some((i) => i === currentUser._id);
     api.changeLikeCardStatus(card._id, !isLiked)
@@ -175,7 +194,7 @@ function App() {
       })
   }
 
-  //Обновление аватара----------------------------------------------------------------------------------------------
+//Обновление аватара----------------------------------------------------------------------------------------------
   function handleUpdateAvatar(userData) {
     api.updateUserAvatar(userData)
       .then((userAvatar) => {
@@ -187,7 +206,7 @@ function App() {
       });
   }
 
-  //Закрытие попапов при клике по оверлэю-----------------------------------------------------------------------
+//Закрытие попапов при клике по оверлэю-----------------------------------------------------------------------
   React.useEffect(() => {
     function handleEscPress(evt) {
       if (evt.key === 'Escape') {
@@ -210,7 +229,7 @@ function App() {
     }
   }, [isEditProfilePopupOpen, isAddPlacePopupOpen, isEditAvatarPopupOpen, isConfirmDeletePopupOpen, selectedCard])
 
-  //Открытие попапов по клику-----------------------------------------------------------------------------------
+//Открытие попапов по клику-----------------------------------------------------------------------------------
   function handleEditAvatarClick() {
     setEditAvatarPopupOpen(true);
   }
@@ -227,7 +246,7 @@ function App() {
     setSelectedCard(selectedCard)
   }
 
-  //Удаление карточки-------------------------------------------------------------------------------------------
+//Удаление карточки-------------------------------------------------------------------------------------------
   function handleCardDelete() {
     api.deleteUserCard(cardId)
       .then(() => {
@@ -240,13 +259,13 @@ function App() {
       });
   }
 
-  //Открытие попапа потдверждения удаления карточки------------------------------------------------------------
+//Открытие попапа потдверждения удаления карточки------------------------------------------------------------
   function handleDeletePlaceClick(card) {
     setCardId(card);
     setConfirmDeletePopupOpen(true);
   }
 
-  //Закрытие попапов-------------------------------------------------------------------------------------------
+//Закрытие попапов-------------------------------------------------------------------------------------------
   function closeAllPopups() {
     setEditAvatarPopupOpen(false);
     setEditProfilePopupOpen(false);
