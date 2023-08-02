@@ -39,34 +39,34 @@ function App() {
   const [cardId, setCardId] = React.useState('');
 
 //Загрузка инфо пользователя и карточек--------------------------------------------------------------------------
-//   React.useEffect(() => {
-//     loggedIn && Promise.all([api.getUserInfo(), api.getInitialCards()])
-//       .then(([user, cards]) => {
-//         setCurrentUser(user);
-//         setCards(cards);
-//       })
-//       .catch((error) => {
-//         console.log(error)
-//       });
-//   }, [loggedIn]);
-
-  function loadData() {
-    api.getUserInfo()
-      .then((user) => {
+  React.useEffect(() => {
+    loggedIn && Promise.all([api.getUserInfo(), api.getInitialCards()])
+      .then(([user, cards]) => {
         setCurrentUser(user);
-      })
-      .catch((error) => {
-        console.log(error)
-      });
-
-    api.getInitialCards()
-      .then((cards) => {
         setCards(cards);
       })
       .catch((error) => {
         console.log(error)
       });
-  }
+  }, [loggedIn]);
+
+  // function loadData() {
+  //   api.getUserInfo()
+  //     .then((user) => {
+  //       setCurrentUser(user);
+  //     })
+  //     .catch((error) => {
+  //       console.log(error)
+  //     });
+  //
+  //   api.getInitialCards()
+  //     .then((cards) => {
+  //       setCards(cards);
+  //     })
+  //     .catch((error) => {
+  //       console.log(error)
+  //     });
+  // }
 
 
 //Регистрация------------------------------------------------------------------------------------------------
@@ -129,18 +129,11 @@ function App() {
   };
 
 //Аутентификация------------------------------------------------------------------------------------------------
-  const checkToken = () => {
+  function checkToken() {
     auth.getContent()
-      .then(res => {
-        if (res.status === 200) {
-          return res.json();
-        } else {
-          throw new Error('Unauthorized');
-        }
-      })
+      .then(res => res.json())
       .then((res) => {
         if (res.email) {
-          loadData();
           setUserEmail(res.email);
           setLoggedIn(true);
           navigate('/', { replace: true });
@@ -149,11 +142,11 @@ function App() {
       .catch((error) => {
         console.log(error);
       })
-  };
+  }
 
   React.useEffect(() => {
     checkToken();
-  }, [loggedIn]);
+  }, []);
 
 //Обновление пользователя----------------------------------------------------------------------------------------
   function handleUpdateUser(newUserData) {
