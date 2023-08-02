@@ -30,8 +30,8 @@ app.use(helmet());
 app.disable('x-powered-by');
 
 app.use(bodyParser.json());
-app.use(cookieParser());
 app.use(cors({ origin: true, credentials: true }));
+app.use(cookieParser());
 app.use(requestLogger);
 
 app.get('/crash-test', () => {

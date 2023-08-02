@@ -113,7 +113,13 @@ function App() {
   //Аутентификация------------------------------------------------------------------------------------------------
   const checkToken = () => {
     auth.getContent()
-      .then(res => res.json())
+      .then(res => {
+        if (res.status === 200) {
+          return res.json();
+        } else {
+          throw new Error('Unauthorized');
+        }
+      })
       .then((res) => {
         if (res.email) {
           setUserEmail(res.email);
