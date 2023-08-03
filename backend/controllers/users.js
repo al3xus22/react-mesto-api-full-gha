@@ -13,10 +13,7 @@ const login = (req, res, next) => {
     .then((user) => {
       const token = jwt.sign({ _id: user._id }, NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret', { expiresIn: '7d' });
       res.cookie('jwt', token, {
-        maxAge: 3600000 * 24 * 7,
-        httpOnly: true,
-        sameSite: 'none',
-        secure: true,
+        maxAge: 3600000 * 24 * 7, httpOnly: true, sameSite: 'none', secure: true,
       }).send(user.toJSON());
     })
     .catch(next);
@@ -62,32 +59,23 @@ const createUser = (req, res, next) => {
   const {
     name, about, avatar, email, password,
   } = req.body;
-  bcrypt.hash(password, 10, (err, hash) => User.findOne({ email })
-    .then((user) => {
-      return User.create({
-        name,
-        about,
-        avatar,
-        email,
-        password: hash,
-      })
-        .then((data) => {
-          res.status(201).send({
-            email: data.email,
-            name: data.name,
-            about: data.about,
-            avatar: data.avatar,
-          });
-        })
-        .catch((err) => {
-          if (err.name === 'ValidationError') {
-            next(new BadRequest(err.message));
-          } else if (err.code === 11000) {
-            next(new ConflictRequest('Такой пользователь уже существует!'));
-          } else {
-            next(err);
-          }
-        });
+  bcrypt.hash(password, 10, (hash) => User.findOne({ email })
+    .then(() => User.create({
+      name, about, avatar, email, password: hash,
+    }))
+    .then((data) => {
+      res.status(201).send({
+        email: data.email, name: data.name, about: data.about, avatar: data.avatar,
+      });
+    })
+    .catch((err) => {
+      if (err.name === 'ValidationError') {
+        next(new BadRequest(err.message));
+      } else if (err.code === 11000) {
+        next(new ConflictRequest('Такой пользователь уже существует!'));
+      } else {
+        next(err);
+      }
     })
     .catch((error) => {
       next(error);
@@ -116,12 +104,5 @@ const updateUserAvatar = (req, res, next) => {
 };
 
 module.exports = {
-  createUser,
-  getUsers,
-  getUser,
-  updateUser,
-  updateUserAvatar,
-  login,
-  logOut,
-  getAuthUser,
+  createUser, getUsers, getUser, updateUser, updateUserAvatar, login, logOut, getAuthUser,
 };

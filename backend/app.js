@@ -1,12 +1,11 @@
 const express = require('express');
 require('dotenv').config();
-const { requestLogger, errorLogger } = require('./middlewares/logger');
-
 const cors = require('cors');
 const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
 const helmet = require('helmet');
 const { errors } = require('celebrate');
+const { requestLogger, errorLogger } = require('./middlewares/logger');
 const serverError = require('./errors/server-error');
 const router = require('./routes');
 
