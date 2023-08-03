@@ -1,5 +1,4 @@
 const router = require('express').Router();
-// eslint-disable-next-line import/no-extraneous-dependencies
 const { validateCardInfo, validateCardId } = require('../middlewares/validators');
 
 const {

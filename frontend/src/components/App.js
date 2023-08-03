@@ -50,25 +50,6 @@ function App() {
       });
   }, [loggedIn]);
 
-  // function loadData() {
-  //   api.getUserInfo()
-  //     .then((user) => {
-  //       setCurrentUser(user);
-  //     })
-  //     .catch((error) => {
-  //       console.log(error)
-  //     });
-  //
-  //   api.getInitialCards()
-  //     .then((cards) => {
-  //       setCards(cards);
-  //     })
-  //     .catch((error) => {
-  //       console.log(error)
-  //     });
-  // }
-
-
 //Регистрация------------------------------------------------------------------------------------------------
   const registerUser = ({ email, password }) => {
     auth.register({ email, password })
@@ -85,7 +66,7 @@ function App() {
         setInfoTooltipOpen(true);
         setTooltip({
           image: false,
-          message: 'Что-то пошло не так!'
+          message: 'Пользователь с таким Email уже существует!'
         });
         console.error(error)
       });
@@ -96,16 +77,10 @@ function App() {
     const { password, email } = formValue;
     auth.authorize({ email, password })
       .then(res => res.ok ? res.json() : Promise.reject(`Ошибка: ${res.status}`))
-      .then(() => {
-        auth.getContent()
-          .then(res => res.json())
-          .then((res) => {
-            if (res) {
-              setUserEmail(res.email);
-              setLoggedIn(true);
-              navigate('/main', { replace: true });
-            }
-          })
+      .then((data) => {
+        setUserEmail(data.email);
+        setLoggedIn(true);
+        navigate('/main', { replace: true });
       })
       .catch((err) => {
         setInfoTooltipOpen(true);
@@ -129,7 +104,7 @@ function App() {
   };
 
 //Аутентификация------------------------------------------------------------------------------------------------
-  function checkToken() {
+  React.useEffect(() => {
     auth.getContent()
       .then(res => res.json())
       .then((res) => {
@@ -142,11 +117,8 @@ function App() {
       .catch((error) => {
         console.log(error);
       })
-  }
-
-  React.useEffect(() => {
-    checkToken();
   }, []);
+
 
 //Обновление пользователя----------------------------------------------------------------------------------------
   function handleUpdateUser(newUserData) {

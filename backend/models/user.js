@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
-// eslint-disable-next-line import/no-extraneous-dependencies
 const validator = require('validator');
 const BadRequest = require('../errors/bad-request');
 const NotAuthorized = require('../errors/not-auth');
@@ -39,7 +38,6 @@ const userSchema = new mongoose.Schema(
     password: {
       type: String,
       required: [true, 'Введите пароль'],
-      minlength: 8,
       select: false,
     },
   },
@@ -50,12 +48,12 @@ userSchema.statics.findUserByCredentials = function (email, password) {
   return this.findOne({ email }).select('+password')
     .then((user) => {
       if (!user) {
-        return Promise.reject(new NotAuthorized('Неправильные почта или пароль'));
+        return Promise.reject(new NotAuthorized('Неправильные почта или пароль 1')); //для отслеживания при разработке
       }
       return bcrypt.compare(password, user.password)
         .then((matched) => {
           if (!matched) {
-            return Promise.reject(new BadRequest('Неправильные почта или пароль'));
+            return Promise.reject(new BadRequest('Неправильные почта или пароль 2'));
           }
           return user;
         });

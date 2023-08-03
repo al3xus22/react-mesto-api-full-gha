@@ -5,10 +5,6 @@ const NotAuthorized = require('../errors/not-auth');
 
 const auth = (req, res, next) => {
   const token = req.cookies.jwt;
-  if (!req.headers.cookie || !req.headers.cookie.startsWith('jwt=')) {
-    next(new NotAuthorized('Необходима авторизация'));
-    return;
-  }
 
   let payload;
 
