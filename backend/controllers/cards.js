@@ -32,19 +32,18 @@ const getCards = (req, res, next) => {
 
 const deleteCard = (req, res, next) => {
   const { cardId } = req.params;
-  Card.findByIdAndDelete(cardId)
-    .orFail(new Error('InvalidCardId'))
+  Card.findById(cardId)
+    .orFail(new NotFoundError('Карточка не найдена'))
     .then((card) => {
       if (!card.owner.equals(req.user._id)) {
         next(new Forbidden('Нельзя удалить чужую карточку'));
       } else {
-        res.send({ data: card });
+        return card.deleteOne()
+          .then(() => res.send(card));
       }
     })
     .catch((err) => {
-      if (err.message === 'InvalidCardId') {
-        next(new NotFoundError('Карточка не найдена'));
-      } else if (err.name === 'CastError') {
+      if (err.name === 'CastError') {
         next(new BadRequest('Некорректный Id карточки'));
       } else {
         next(err);
