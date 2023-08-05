@@ -92,8 +92,8 @@ class Api {
 }
 
 export const api = new Api({
-  baseUrl: 'http://localhost:3001',
-  //baseUrl: 'https://kartback.nomoreparties.co',
+  //baseUrl: 'http://localhost:3001',
+  baseUrl: 'https://kartback.nomoreparties.co',
   headers: {
     'Accept': 'application/json',
     'Content-Type': 'application/json'
