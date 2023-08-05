@@ -59,8 +59,8 @@ const createUser = (req, res, next) => {
   const {
     name, about, avatar, email, password,
   } = req.body;
-  bcrypt.hash(password, 10, (hash) => User.findOne({ email })
-    .then(() => User.create({
+  bcrypt.hash(password, 10)
+    .then((hash) => User.create({
       name, about, avatar, email, password: hash,
     }))
     .then((data) => {
@@ -77,9 +77,6 @@ const createUser = (req, res, next) => {
         next(err);
       }
     })
-    .catch((error) => {
-      next(error);
-    }));
 };
 
 const updateUser = (req, res, next) => {
