@@ -12,9 +12,5 @@
 :white_check_mark: лайкания фотографий;  
 :white_check_mark: удаления фотографий;
 
-  
-Пожалуйста, прикрепите в это описание ссылку на сайт, размещенный на Яндекс.Облаке.
-
->>>>>>> abee57f5d2f3368940fa0fd7f5e2adeee89e543b
 ## Ссылки на проект
 Frontend https://kartochki.ru.nomoreparties.co
