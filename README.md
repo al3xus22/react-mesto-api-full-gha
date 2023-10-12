@@ -1,6 +1,4 @@
-<img src="https://cdn1.ozone.ru/s3/multimedia-u/6265130454.jpg" alt="Mesto-pic" />
-
-[![Статус тестов](../../actions/workflows/tests.yml/badge.svg)](../../actions/workflows/tests.yml)
+<img src="https://github.com/al3xus22/react-mesto-api-full-gha/blob/main/Mesto-gallery.png" alt="Mesto-pic" />
 
 # Проект Место (полная версия)
 
